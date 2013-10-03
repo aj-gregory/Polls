@@ -22,7 +22,11 @@ ActiveRecord::Base.transaction do
   AnswerChoice.create!([{:answer_body => "Lasagna", :question_id => 2}])
   AnswerChoice.create!([{:answer_body => "Tofu", :question_id => 2}])
 
-  Response.create!([{:user_id => 2, :answer_choice_id => 2}])
-  Response.create!([{:user_id => 2, :answer_choice_id => 3}])
-  Response.create!([{:user_id => 2, :answer_choice_id => 4}]) #should raise   error
+  Response.create!([{:user_id => 2, :answer_choice_id => 1}]) #red
+  Response.create!([{:user_id => 2, :answer_choice_id => 3}]) #lasagna
+  Response.create!([{:user_id => 3, :answer_choice_id => 1}]) #red
+  Response.create!([{:user_id => 3, :answer_choice_id => 3}]) #lasagna
+  Response.create!([{:user_id => 4, :answer_choice_id => 2}]) #blue
+  Response.create!([{:user_id => 4, :answer_choice_id => 3}]) #lasagna
+  #Response.create!([{:user_id => 1, :answer_choice_id => 4}]) #should raise   error
 end

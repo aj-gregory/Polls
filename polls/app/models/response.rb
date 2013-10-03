@@ -4,6 +4,7 @@ class Response < ActiveRecord::Base
   validates :user_id, :presence => true
   validates :answer_choice_id, :presence => true
   validate :respondent_has_not_already_answered_question
+  validate :respondent_is_not_the_poll_creator
 
   belongs_to :answer_choice,
     :class_name => "AnswerChoice",
@@ -18,7 +19,14 @@ class Response < ActiveRecord::Base
   def respondent_has_not_already_answered_question
     return if existing_responses.count == 0
     if existing_responses.first.id != self.id
-      errors[:already_answered] << "already answered this question"
+      errors[:user_id] << "already answered this question"
+    end
+  end
+
+  def respondent_is_not_the_poll_creator
+    poll_creator = User.joins(:authored_polls => {:questions => :answer_choices}).where('answer_choices.id = ?', self.answer_choice_id).first
+    if poll_creator.id == self.user_id
+      errors[:user_id] << "cannot respond to own poll"
     end
   end
 
