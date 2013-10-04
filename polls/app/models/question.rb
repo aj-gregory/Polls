@@ -19,6 +19,7 @@ class Question < ActiveRecord::Base
       .select("answer_choices.*, COUNT(*) AS responses_count")
       .joins("JOIN responses ON answer_choices.id = responses.answer_choice_id")
       .group("answer_choices.id")
+
     answer_counts = {}
 
     self.answer_choices.each do |answer|

@@ -27,6 +27,6 @@ ActiveRecord::Base.transaction do
   Response.create!([{:user_id => 3, :answer_choice_id => 1}]) #red
   Response.create!([{:user_id => 3, :answer_choice_id => 3}]) #lasagna
   Response.create!([{:user_id => 4, :answer_choice_id => 2}]) #blue
-  Response.create!([{:user_id => 4, :answer_choice_id => 3}]) #lasagna
+  #Response.create!([{:user_id => 4, :answer_choice_id => 3}]) #lasagna
   #Response.create!([{:user_id => 1, :answer_choice_id => 4}]) #should raise   error
 end

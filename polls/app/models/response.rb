@@ -17,14 +17,16 @@ class Response < ActiveRecord::Base
     :primary_key => :id
 
   def respondent_has_not_already_answered_question
-    return if existing_responses.count == 0
-    if existing_responses.first.id != self.id
+    if existing_responses.count != 0 && existing_responses.first.id != self.id
       errors[:user_id] << "already answered this question"
     end
   end
 
   def respondent_is_not_the_poll_creator
-    poll_creator = User.joins(:authored_polls => {:questions => :answer_choices}).where('answer_choices.id = ?', self.answer_choice_id).first
+    poll_creator = User
+      .joins(:authored_polls => {:questions => :answer_choices})
+      .where('answer_choices.id = ?', self.answer_choice_id)
+      .first
     if poll_creator.id == self.user_id
       errors[:user_id] << "cannot respond to own poll"
     end
@@ -33,8 +35,8 @@ class Response < ActiveRecord::Base
   private
 
   def existing_responses
-    Response.find_by_sql [
-    "SELECT
+    Response.find_by_sql [<<-SQL, self.user_id, self.answer_choice_id]
+    SELECT
       responses.id
     FROM
       responses
@@ -51,6 +53,7 @@ class Response < ActiveRecord::Base
       FROM
         answer_choices
       WHERE
-        id = ? )", self.user_id, self.answer_choice_id]
+        id = ? )
+    SQL
   end
 end
